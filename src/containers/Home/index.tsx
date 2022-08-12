@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { FlatList, ListRenderItem, ListRenderItemInfo, ScrollView, Text, View, } from 'react-native';
-import { Button } from "../../components";
+import { Button, SelectionModal } from "../../components";
+import { SelectionModalHandle } from "../../components/SelectionModal";
 import styles from "./styles";
-import TodoItem, { TodoType } from "./TodoItem";
+import TodoItem, { StatusType, TodoType } from "./TodoItem";
 
 function rand() { return Math.round(Math.random()*100)%3 as unknown as 0|1|2}
-const todoData: TodoType[] = [
+const TODO_DATA: TodoType[] = [
   {
     id: 1, title: "Todo", status: rand(),
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dignissim mi aliquet, pharetra arcu nec, posuere tellus. Ut faucibus tortor massa, a auctor nisl ultricies eget. Integer vel justo felis.",
@@ -68,25 +69,44 @@ export type Props = {
 
 const Home: React.FC<Props> = (props) =>
 {
+  const pickerRef = useRef<SelectionModalHandle>();
+  const [todoData, setTodoData] = useState(TODO_DATA);
+
   const renderList = () =>
   {
-    const renderItem: ListRenderItem<TodoType> = ({ item }: ListRenderItemInfo<TodoType>) => (
-      <TodoItem data={item} key={item.id} style={styles.item}/>
-    )
+
+    const renderItem: ListRenderItem<TodoType> = ({ item }: ListRenderItemInfo<TodoType>) => {
+      const onItemPress = () =>
+      {
+        pickerRef.current?.show(item.id);
+      }
+      return <TodoItem data={item} style={styles.item} onStatusPress={onItemPress}/>
+    }
     return (
       <FlatList
         data={todoData}
         renderItem={renderItem}
         style={styles.list}
         contentContainerStyle={styles.listContainer}
+        keyExtractor={(item)=>item.id.toString()}
         ItemSeparatorComponent={()=><View style={styles.itemSeparator}/>}
       />
     )
+  }
+
+  const itemSelectionCallback = (todoId:number, status:StatusType) =>
+  {
+    const data = [...todoData];
+    const todoIndex:number = data.findIndex((todo)=>todo.id===todoId);
+    data[todoIndex] = {...data[todoIndex], status};
+
+    setTodoData(data);
   }
   return (
     <View style={styles.container}>
       {renderList()}
       <Button.FloatingButton/>
+      <SelectionModal ref={pickerRef} callback={itemSelectionCallback}/>
     </View>
   );
 }

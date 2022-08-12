@@ -1,26 +1,31 @@
 import React from "react";
-import { ScrollView, Text, View, ViewStyle, } from 'react-native';
+import { Text, View, ViewStyle, } from 'react-native';
 import styles from "./styles";
+import { TouchableOpacity } from 'react-native';
 
 export const Status = {
   0 : {id: 0, value: "Pending",},
   1 : {id: 1, value: "Assigned",},
   2 : {id: 2, value: "Completed",},
 }
+
+export type StatusType = 0 | 1 | 2;
+
 export type TodoType = {
   id: number,
   title: string,
   description: string,
-  status:  0|1|2,
+  status:  StatusType,
 };
 export type Props = {
   data: TodoType,
   style: ViewStyle,
+  onStatusPress: Function,
 }
 
 const TodoItem: React.FC<Props> = (props) =>
 {
-  const { style } = props;
+  const { style, onStatusPress } = props;
   const { id, title, description, status, } = props.data;
 
   return (
@@ -29,9 +34,9 @@ const TodoItem: React.FC<Props> = (props) =>
         <Text style={styles.title}>{title} {id}</Text>
         <Text style={styles.description}>{description}</Text>
       </View>
-      <View style={styles.statusContainer}>
+      <TouchableOpacity style={styles.statusContainer} onPress={()=>onStatusPress()}>
         <Text style={styles.status}>{Status[status].value}</Text>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 }
