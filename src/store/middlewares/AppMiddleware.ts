@@ -13,7 +13,7 @@ export default class AppMiddleware
         {
             //some api call
             // success can be true or false randomly
-            let success: number | boolean = yield delay(1000, CommonUtils.randomNumber(0, 2))
+            let success: number | boolean = yield delay(10000, CommonUtils.randomNumber(0, 2))
             success = Boolean(success);
             if (success)
             {
