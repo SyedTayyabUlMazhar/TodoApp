@@ -1,12 +1,28 @@
 import React from "react";
-import { Home } from "./containers";
+import 'react-native-gesture-handler';
+import { AddTodo, Home } from "./containers";
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationService } from "./config";
 
 export type Props = {
 }
 
-const App: React.FC<Props> = (props) => {
+const Stack = createStackNavigator();
+
+const App: React.FC<Props> = (props) =>
+{
   return (
-    <Home/>
+    <NavigationContainer
+      ref={navigatorRef =>
+      {
+        NavigationService.setTopLevelNavigator(navigatorRef)
+      }}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="AddTodo" component={AddTodo} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 

@@ -9,24 +9,30 @@ export default StyleSheet.create({
     flex: 1,
   },
 
-  title:{
+  title: {
     fontSize: 16,
     fontWeight: "bold",
   },
 
-  statusContainer:{
-    justifyContent:'center',
-    paddingHorizontal:16,
+  statusContainer: {
+    justifyContent: 'center',
+    paddingHorizontal: 16,
   },
-  status:{
+  status: {
     fontSize: 16,
   },
 
-  description:{
+  description: {
     marginTop: 8,
     fontSize: 12,
   },
 
-  
+  deleteText: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    fontSize: 10,
+  }
+
 
 });

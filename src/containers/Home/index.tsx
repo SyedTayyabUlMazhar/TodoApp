@@ -2,10 +2,12 @@ import React, { useRef, useState } from "react";
 import { FlatList, ListRenderItem, ListRenderItemInfo, ScrollView, Text, View, } from 'react-native';
 import { Button, SelectionModal } from "../../components";
 import { SelectionModalHandle } from "../../components/SelectionModal";
+import { NavigationService } from "../../config";
+import { CommonUtils } from "../../config/utils";
 import styles from "./styles";
 import TodoItem, { StatusType, TodoType } from "./TodoItem";
 
-function rand() { return Math.round(Math.random()*100)%3 as unknown as 0|1|2}
+function rand() { return Math.round(Math.random() * 100) % 3 as unknown as 0 | 1 | 2 }
 const TODO_DATA: TodoType[] = [
   {
     id: 1, title: "Todo", status: rand(),
@@ -70,17 +72,27 @@ export type Props = {
 const Home: React.FC<Props> = (props) =>
 {
   const pickerRef = useRef<SelectionModalHandle>();
-  const [todoData, setTodoData] = useState(TODO_DATA);
+  const [todoData, setTodoData] = useState<TodoType[]>([]);
 
   const renderList = () =>
   {
 
-    const renderItem: ListRenderItem<TodoType> = ({ item }: ListRenderItemInfo<TodoType>) => {
+    const renderItem: ListRenderItem<TodoType> = ({ item }: ListRenderItemInfo<TodoType>) =>
+    {
       const onItemPress = () =>
       {
         pickerRef.current?.show(item.id);
       }
-      return <TodoItem data={item} style={styles.item} onStatusPress={onItemPress}/>
+
+      const onDeletePress = (idOfTodoToDelete: number) =>
+      {
+        const newList = [...todoData];
+        const toDeleteIndex:number = newList.findIndex((todo)=>todo.id===idOfTodoToDelete);
+        newList[toDeleteIndex] = {...newList[toDeleteIndex], deletedAt:CommonUtils.utcTimeNow()};
+        
+        setTodoData(newList);
+      };
+      return <TodoItem data={item} style={styles.item} onStatusPress={onItemPress} onDeletePress={onDeletePress} />
     }
     return (
       <FlatList
@@ -88,25 +100,30 @@ const Home: React.FC<Props> = (props) =>
         renderItem={renderItem}
         style={styles.list}
         contentContainerStyle={styles.listContainer}
-        keyExtractor={(item)=>item.id.toString()}
-        ItemSeparatorComponent={()=><View style={styles.itemSeparator}/>}
+        keyExtractor={(item) => item.id.toString()}
+        ItemSeparatorComponent={() => <View style={styles.itemSeparator} />}
       />
     )
   }
 
-  const itemSelectionCallback = (todoId:number, status:StatusType) =>
+  const updateTodoStatus = (todoId: number, status: StatusType) =>
   {
     const data = [...todoData];
-    const todoIndex:number = data.findIndex((todo)=>todo.id===todoId);
-    data[todoIndex] = {...data[todoIndex], status};
+    const todoIndex: number = data.findIndex((todo) => todo.id === todoId);
+    data[todoIndex] = { ...data[todoIndex], status, updatedAt: CommonUtils.utcTimeNow(), };
 
     setTodoData(data);
+  }
+
+  const onAdd = (todo: TodoType) =>
+  {
+    setTodoData((data) => [{ ...todo, id: data.length + 1 }, ...data,]);
   }
   return (
     <View style={styles.container}>
       {renderList()}
-      <Button.FloatingButton/>
-      <SelectionModal ref={pickerRef} callback={itemSelectionCallback}/>
+      <Button.FloatingButton onPress={() => NavigationService.navigate("AddTodo", { onAdd })} />
+      <SelectionModal ref={pickerRef} callback={updateTodoStatus} />
     </View>
   );
 }
