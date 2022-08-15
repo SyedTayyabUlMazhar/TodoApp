@@ -1,12 +1,12 @@
 
-const CommonActionTypes = { Default: 'Default', Success: "Success", Failure: "Failure", };
+export const CommonActionTypes = { Default: 'Default', Success: "Success", Failure: "Failure", };
 
 // Action that is dispatched to store dispatch(action:Action)
 export type Action = { type:string, payload: object, cb?: Function, vararg: any[] };
 
 type ActionCreator = { (payload: object, cb?: Function, ...arg: any[]): Action, type: string };
 
-type ActionCreators = { Default: ActionCreator, Success: ActionCreator, Failure: ActionCreator, };
+type ActionCreators = { BaseType:string, Default: ActionCreator, Success: ActionCreator, Failure: ActionCreator, };
 
 function createActionCreator(type: string): ActionCreator
 {
@@ -27,7 +27,7 @@ function createActionCreator(type: string): ActionCreator
 */
 function createActions(baseType: string): ActionCreators
 {
-  const actionCreators: any = {};
+  const actionCreators: any = {BaseType:baseType};
 
   const commonActionTypes = Object.values(CommonActionTypes);
 
