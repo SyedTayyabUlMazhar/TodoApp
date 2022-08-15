@@ -1,6 +1,7 @@
 import React from 'react';
 import { ActivityIndicator, ActivityIndicatorProps } from 'react-native';
 import styles from './styles';
+import { Modal, View, } from 'react-native';
 
 const Loader: React.FC<ActivityIndicatorProps>
     = ({ style, isModalLoader, ...props }) => {
