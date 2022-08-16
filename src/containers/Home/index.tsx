@@ -1,13 +1,13 @@
 import React, { useRef, useState } from "react";
 import { FlatList, ListRenderItem, ListRenderItemInfo, ScrollView, Text, View, } from 'react-native';
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Button, SelectionModal } from "../../components";
 import { SelectionModalHandle } from "../../components/SelectionModal";
 import { NavigationService } from "../../config";
-import { CommonUtils } from "../../config/utils";
 import styles from "./styles";
 import TodoItem, { StatusType, TodoType } from "./TodoItem";
 import { TodoSelectors } from "../../store/selectors";
+import { UpdateTodoActions } from "../../store/actions/AppAction";
 
 export type Props = {
 }
@@ -15,8 +15,9 @@ export type Props = {
 const Home: React.FC<Props> = (props) =>
 {
   const pickerRef = useRef<SelectionModalHandle>();
-  const [_, setTodoData] = useState<TodoType[]>([]);
   const todoData = useSelector(TodoSelectors.selectTodos);
+
+  const dispatch = useDispatch();
 
   const renderList = () =>
   {
@@ -44,11 +45,11 @@ const Home: React.FC<Props> = (props) =>
 
   const updateTodoStatus = (todoId: number, status: StatusType) =>
   {
-    const data = [...todoData];
-    const todoIndex: number = data.findIndex((todo) => todo.id === todoId);
-    data[todoIndex] = { ...data[todoIndex], status, updatedAt: CommonUtils.utcTimeNow(), };
+    const updates:Partial<TodoType> = {status};
+    const payload = {id: todoId, updates};
+    const action = UpdateTodoActions.Default(payload);
 
-    setTodoData(data);
+    dispatch(action);
   }
 
   return (
