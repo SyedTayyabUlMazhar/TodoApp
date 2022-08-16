@@ -24,12 +24,12 @@ export default function TodoReducer(state = initialState, action: Action)
             return state;
         }
         case DeleteTodoActions.Success.type: {
-            const id = payload.id;
+            const { id, deletedAt } = payload;
 
             const toDeleteIndex: number = state.todos.findIndex((todo) => todo.id === id);
 
             let updatedTodoItem = state.todos[toDeleteIndex];
-            updatedTodoItem = { ...updatedTodoItem, deletedAt: CommonUtils.utcTimeNow() }
+            updatedTodoItem = { ...updatedTodoItem, deletedAt }
 
             state = { ...state, todos: [...state.todos] };
             state.todos[toDeleteIndex] = updatedTodoItem;

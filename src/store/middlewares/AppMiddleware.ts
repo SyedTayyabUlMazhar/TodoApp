@@ -5,6 +5,7 @@ import { CommonUtils } from '../../config/utils';
 import { Action } from '../actions/ActionCreator';
 import firestore from '@react-native-firebase/firestore';
 import { TodoType } from '../../containers/Home/TodoItem';
+import { Alert } from 'react-native';
 
 const TodoCollection = firestore().collection("todo");
 export default class AppMiddleware
@@ -36,20 +37,20 @@ export default class AppMiddleware
         {
             //some api call
             // success can be true or false randomly
-            let success: number | boolean = yield delay(10000, CommonUtils.randomNumber(0, 2))
-            success = Boolean(success);
-            if (success)
-            {
-                yield put(Success(action.payload))
-                yield call(() => action.cb?.());
-            }
-            else
-            {
-                yield put(Failure({}))
-            }
+            const id: number = action.payload.id;
+            const updatedTodo: Pick<TodoType, "deletedAt"> = { deletedAt: CommonUtils.utcTimeNow() };
+            yield TodoCollection.doc(id.toString()).update(updatedTodo);
+
+            const successPayload: Pick<TodoType, "id" | "deletedAt"> = { id, deletedAt: updatedTodo.deletedAt };
+
+            yield put(Success(successPayload))
+            yield call(() => action.cb?.());
         }
         catch (err)
         {
+            console.log("DeleteTodo Error e:", err);
+            const formattedError = getFormattedError(err);
+            Alert.alert("Error: " + formattedError.error.code, formattedError.error.message);
             yield put(Failure({}))
         }
     }
@@ -78,4 +79,21 @@ export default class AppMiddleware
             yield put(Failure({}))
         }
     }
+}
+
+function getFormattedError(e:any) {
+    // [auth/no-current-user] No user currently signed in.
+    let message = e?.message;
+    const code = e?.code;
+    const regularExpression = new RegExp(`^(\\[.+\\])\\s+(.+)$`);
+
+    // 0: [auth/no-current-user] No user currently signed in.
+    // 1: [auth/no-current-user]
+    // 2: No user currently signed in.
+    const matches = regularExpression.exec(message);
+
+    message = matches?.[2];
+
+    const formattedError = { error: { code, message } };
+    return formattedError;
 }
