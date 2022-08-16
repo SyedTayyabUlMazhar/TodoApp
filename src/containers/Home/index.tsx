@@ -8,6 +8,7 @@ import styles from "./styles";
 import TodoItem, { StatusType, TodoType } from "./TodoItem";
 import { TodoSelectors } from "../../store/selectors";
 import { UpdateTodoActions } from "../../store/actions/AppAction";
+import { CommonUtils } from "../../config/utils";
 
 export type Props = {
 }
@@ -45,7 +46,7 @@ const Home: React.FC<Props> = (props) =>
 
   const updateTodoStatus = (todoId: number, status: StatusType) =>
   {
-    const updates:Partial<TodoType> = {status};
+    const updates:Partial<TodoType> = {status, updatedAt:CommonUtils.utcTimeNow()};
     const payload = {id: todoId, updates};
     const action = UpdateTodoActions.Default(payload);
 

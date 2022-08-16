@@ -42,7 +42,7 @@ export default function TodoReducer(state = initialState, action: Action)
             const toUpdateIndex: number = state.todos.findIndex((todo) => todo.id === id);
 
             const itemToUpdate = state.todos[toUpdateIndex];
-            const updatedItem = { ...itemToUpdate, ...updates, updatedAt: CommonUtils.utcTimeNow() }
+            const updatedItem = { ...itemToUpdate, ...updates}
 
             state = { ...state, todos: [...state.todos] };
             state.todos[toUpdateIndex] = updatedItem;

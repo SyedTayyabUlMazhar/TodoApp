@@ -62,20 +62,18 @@ export default class AppMiddleware
         {
             //some api call
             // success can be true or false randomly
-            let success: number | boolean = yield delay(10000, CommonUtils.randomNumber(0, 2))
-            success = Boolean(success);
-            if (success)
-            {
-                yield put(Success(action.payload))
-                yield call(() => action.cb?.());
-            }
-            else
-            {
-                yield put(Failure({}))
-            }
+            let {id, updates} = action.payload;
+            yield TodoCollection.doc(id.toString()).update(updates);
+
+            const successPayload = { id, updates };
+
+            yield put(Success(successPayload))
+            yield call(() => action.cb?.());
         }
         catch (err)
         {
+            const formattedError = getFormattedError(err);
+            Alert.alert("Error: " + formattedError.error.code, formattedError.error.message);
             yield put(Failure({}))
         }
     }
