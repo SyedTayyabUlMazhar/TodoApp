@@ -1,78 +1,22 @@
 import React, { useRef, useState } from "react";
 import { FlatList, ListRenderItem, ListRenderItemInfo, ScrollView, Text, View, } from 'react-native';
+import { useSelector } from "react-redux";
 import { Button, SelectionModal } from "../../components";
 import { SelectionModalHandle } from "../../components/SelectionModal";
 import { NavigationService } from "../../config";
 import { CommonUtils } from "../../config/utils";
 import styles from "./styles";
 import TodoItem, { StatusType, TodoType } from "./TodoItem";
+import { TodoSelectors } from "../../store/selectors";
 
-function rand() { return Math.round(Math.random() * 100) % 3 as unknown as 0 | 1 | 2 }
-const TODO_DATA: TodoType[] = [
-  {
-    id: 1, title: "Todo", status: rand(),
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dignissim mi aliquet, pharetra arcu nec, posuere tellus. Ut faucibus tortor massa, a auctor nisl ultricies eget. Integer vel justo felis.",
-  },
-  {
-    id: 2, title: "Todo", status: rand(),
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dignissim mi aliquet, pharetra arcu nec, posuere tellus. Ut faucibus tortor massa, a auctor nisl ultricies eget. Integer vel justo felis.",
-  },
-  {
-    id: 3, title: "Todo", status: rand(),
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dignissim mi aliquet, pharetra arcu nec, posuere tellus. Ut faucibus tortor massa, a auctor nisl ultricies eget. Integer vel justo felis.",
-  },
-  {
-    id: 4, title: "Todo", status: rand(),
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dignissim mi aliquet, pharetra arcu nec, posuere tellus. Ut faucibus tortor massa, a auctor nisl ultricies eget. Integer vel justo felis.",
-  },
-  {
-    id: 5, title: "Todo", status: rand(),
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dignissim mi aliquet, pharetra arcu nec, posuere tellus. Ut faucibus tortor massa, a auctor nisl ultricies eget. Integer vel justo felis.",
-  },
-  {
-    id: 6, title: "Todo", status: rand(),
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dignissim mi aliquet, pharetra arcu nec, posuere tellus. Ut faucibus tortor massa, a auctor nisl ultricies eget. Integer vel justo felis.",
-  },
-  {
-    id: 7, title: "Todo", status: rand(),
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dignissim mi aliquet, pharetra arcu nec, posuere tellus. Ut faucibus tortor massa, a auctor nisl ultricies eget. Integer vel justo felis.",
-  },
-  {
-    id: 8, title: "Todo", status: rand(),
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dignissim mi aliquet, pharetra arcu nec, posuere tellus. Ut faucibus tortor massa, a auctor nisl ultricies eget. Integer vel justo felis.",
-  },
-  {
-    id: 9, title: "Todo", status: rand(),
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dignissim mi aliquet, pharetra arcu nec, posuere tellus. Ut faucibus tortor massa, a auctor nisl ultricies eget. Integer vel justo felis.",
-  },
-  {
-    id: 10, title: "Todo", status: rand(),
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dignissim mi aliquet, pharetra arcu nec, posuere tellus. Ut faucibus tortor massa, a auctor nisl ultricies eget. Integer vel justo felis.",
-  },
-  {
-    id: 11, title: "Todo", status: rand(),
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dignissim mi aliquet, pharetra arcu nec, posuere tellus. Ut faucibus tortor massa, a auctor nisl ultricies eget. Integer vel justo felis.",
-  },
-  {
-    id: 12, title: "Todo", status: rand(),
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dignissim mi aliquet, pharetra arcu nec, posuere tellus. Ut faucibus tortor massa, a auctor nisl ultricies eget. Integer vel justo felis.",
-  },
-  {
-    id: 13, title: "Todo", status: rand(),
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dignissim mi aliquet, pharetra arcu nec, posuere tellus. Ut faucibus tortor massa, a auctor nisl ultricies eget. Integer vel justo felis.",
-  },
-  {
-    id: 14, title: "Todo", status: rand(),
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dignissim mi aliquet, pharetra arcu nec, posuere tellus. Ut faucibus tortor massa, a auctor nisl ultricies eget. Integer vel justo felis.",
-  },
-]
 export type Props = {
 }
 
 const Home: React.FC<Props> = (props) =>
 {
   const pickerRef = useRef<SelectionModalHandle>();
-  const [todoData, setTodoData] = useState<TodoType[]>([]);
+  const [_, setTodoData] = useState<TodoType[]>([]);
+  const todoData = useSelector(TodoSelectors.selectTodos);
 
   const renderList = () =>
   {
@@ -115,14 +59,10 @@ const Home: React.FC<Props> = (props) =>
     setTodoData(data);
   }
 
-  const onAdd = (todo: TodoType) =>
-  {
-    setTodoData((data) => [{ ...todo, id: data.length + 1 }, ...data,]);
-  }
   return (
     <View style={styles.container}>
       {renderList()}
-      <Button.FloatingButton onPress={() => NavigationService.navigate("AddTodo", { onAdd })} />
+      <Button.FloatingButton onPress={() => NavigationService.navigate("AddTodo")} />
       <SelectionModal ref={pickerRef} callback={updateTodoStatus} />
     </View>
   );

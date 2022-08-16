@@ -1,14 +1,18 @@
 import React, { useRef, useState } from 'react';
 import { View, Text, TextInput } from 'react-native';
-import { Button, SelectionModal } from '../../components';
+import { ActionLoader, Button, SelectionModal } from '../../components';
 import { SelectionModalHandle } from '../../components/SelectionModal';
 import { Status, StatusType, TodoType } from '../Home/TodoItem';
 import styles from './styles';
 import { NavigationService } from '../../config';
 import { CommonUtils } from '../../config/utils';
+import { AddTodoActions } from '../../store/actions/AppAction';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { TodoSelectors } from '../../store/selectors';
 
 export type Props = {
-  route:any,
+  route: any,
 };
 
 const AddTodo: React.FC<Props> = (props) =>
@@ -18,6 +22,9 @@ const AddTodo: React.FC<Props> = (props) =>
   const [todoStatus, setTodoStatus] = useState<StatusType>(0);
 
   const pickerRef = useRef<SelectionModalHandle>();
+  const todosLength = useSelector(TodoSelectors.selectTodosLength);
+
+  const dispatch = useDispatch();
 
   const onStatusPress = () =>
   {
@@ -32,9 +39,8 @@ const AddTodo: React.FC<Props> = (props) =>
   const onSubmit = () =>
   {
     const createdAt = CommonUtils.utcTimeNow();
-    const todo:TodoType = {id:0, description, status:todoStatus, title, createdAt, updatedAt: createdAt};
-    props?.route?.params.onAdd(todo);
-    NavigationService.goBack();
+    const todo: TodoType = { id: todosLength + 1, description, status: todoStatus, title, createdAt, updatedAt: createdAt };
+    dispatch(AddTodoActions.Default(todo, () => NavigationService.goBack()));
   }
   return (
     <View style={styles.container}>
@@ -51,6 +57,7 @@ const AddTodo: React.FC<Props> = (props) =>
       <Text onPress={onStatusPress}>{Status[todoStatus].value}</Text>
       <SelectionModal ref={pickerRef} callback={onStatusSelectedInModal} />
       <Button.Standard containerStyle={styles.submitBtn} text="Confirm" onPress={onSubmit} />
+      <ActionLoader type={AddTodoActions.BaseType} isModalLoader={true} />
     </View>
   );
 };

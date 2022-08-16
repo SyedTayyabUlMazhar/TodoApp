@@ -5,17 +5,19 @@ import { AddTodoActions } from "../actions/AppAction";
 type StateType = {
     todos: TodoType[],
 }
-const initialState:StateType = {
-    todos:[]
+const initialState: StateType = {
+    todos: []
 };
 
-export default function TodoReducer (state = initialState, action: Action)
+export default function TodoReducer(state = initialState, action: Action)
 {
     switch (action.type)
     {
         case AddTodoActions.Success.type:
-            state = {...state};
-            state.todos = [action.payload as TodoType, ...state.todos,]
+
+            const todo = {...action.payload} as TodoType;
+
+            state = { ...state, todos: [todo, ...state.todos,] };
             return state;
 
         default:

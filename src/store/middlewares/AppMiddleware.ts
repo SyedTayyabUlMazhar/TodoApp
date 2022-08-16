@@ -1,5 +1,5 @@
 // import { NavigationService, ApiCaller, Constants, showToast } from '../../config';
-import { delay, put } from 'redux-saga/effects';
+import { call, delay, put } from 'redux-saga/effects';
 import { AddTodoActions } from '../actions/AppAction';
 import { CommonUtils } from '../../config/utils';
 import {Action} from '../actions/ActionCreator';
@@ -18,6 +18,7 @@ export default class AppMiddleware
             if (success)
             {
                 yield put(AddTodoActions.Success(action.payload))
+                yield call(()=>action.cb?.());
             }
             else
             {
