@@ -2,7 +2,7 @@
 import { call, delay, put } from 'redux-saga/effects';
 import { AddTodoActions, DeleteTodoActions, UpdateTodoActions } from '../actions/AppAction';
 import { CommonUtils } from '../../config/utils';
-import {Action} from '../actions/ActionCreator';
+import { Action } from '../actions/ActionCreator';
 import firestore from '@react-native-firebase/firestore';
 import { TodoType } from '../../containers/Home/TodoItem';
 
@@ -10,9 +10,9 @@ const TodoCollection = firestore().collection("todo");
 export default class AppMiddleware
 {
 
-    static *AddTodo (action:Action)
+    static *AddTodo(action: Action)
     {
-        const {Success, Failure, } = AddTodoActions;
+        const { Success, Failure, } = AddTodoActions;
         const todo: TodoType = action.payload as TodoType;
         try
         {
@@ -29,9 +29,9 @@ export default class AppMiddleware
         }
     }
 
-    static *DeleteTodo (action:Action)
+    static *DeleteTodo(action: Action)
     {
-        const {Success, Failure, } = DeleteTodoActions;
+        const { Success, Failure, } = DeleteTodoActions;
         try
         {
             //some api call
@@ -41,7 +41,7 @@ export default class AppMiddleware
             if (success)
             {
                 yield put(Success(action.payload))
-                yield call(()=>action.cb?.());
+                yield call(() => action.cb?.());
             }
             else
             {
@@ -54,9 +54,9 @@ export default class AppMiddleware
         }
     }
 
-    static *UpdateTodo (action:Action)
+    static *UpdateTodo(action: Action)
     {
-        const {Success, Failure, } = UpdateTodoActions;
+        const { Success, Failure, } = UpdateTodoActions;
         try
         {
             //some api call
@@ -66,7 +66,7 @@ export default class AppMiddleware
             if (success)
             {
                 yield put(Success(action.payload))
-                yield call(()=>action.cb?.());
+                yield call(() => action.cb?.());
             }
             else
             {
