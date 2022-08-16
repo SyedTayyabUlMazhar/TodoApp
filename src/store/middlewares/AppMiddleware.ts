@@ -9,6 +9,8 @@ export default class AppMiddleware
 
     static *AddTodo (action:Action)
     {
+        const {Success, Failure, } = AddTodoActions;
+
         try
         {
             //some api call
@@ -17,17 +19,17 @@ export default class AppMiddleware
             success = Boolean(success);
             if (success)
             {
-                yield put(AddTodoActions.Success(action.payload))
+                yield put(Success(action.payload))
                 yield call(()=>action.cb?.());
             }
             else
             {
-                yield put(AddTodoActions.Failure({}))
+                yield put(Failure({}))
             }
         }
         catch (err)
         {
-            yield put(AddTodoActions.Failure({}))
+            yield put(Failure({}))
         }
     }
 
