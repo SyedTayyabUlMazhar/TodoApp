@@ -28,15 +28,7 @@ const Home: React.FC<Props> = (props) =>
         pickerRef.current?.show(item.id);
       }
 
-      const onDeletePress = (idOfTodoToDelete: number) =>
-      {
-        const newList = [...todoData];
-        const toDeleteIndex:number = newList.findIndex((todo)=>todo.id===idOfTodoToDelete);
-        newList[toDeleteIndex] = {...newList[toDeleteIndex], deletedAt:CommonUtils.utcTimeNow()};
-        
-        setTodoData(newList);
-      };
-      return <TodoItem data={item} style={styles.item} onStatusPress={onItemPress} onDeletePress={onDeletePress} />
+      return <TodoItem data={item} style={styles.item} onStatusPress={onItemPress} />
     }
     return (
       <FlatList

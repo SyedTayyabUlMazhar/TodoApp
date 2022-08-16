@@ -3,6 +3,8 @@ import { Text, View, ViewStyle, } from 'react-native';
 import styles from "./styles";
 import { TouchableOpacity } from 'react-native';
 import { CommonUtils } from "../../../config/utils";
+import { useDispatch } from 'react-redux';
+import { DeleteTodoActions } from "../../../store/actions/AppAction";
 
 export const Status = {
   0: { id: 0, value: "Pending", },
@@ -25,21 +27,29 @@ export type Props = {
   data: TodoType,
   style: ViewStyle,
   onStatusPress: Function,
-  onDeletePress: (todoId: number) => void,
 }
 
 const TodoItem: React.FC<Props> = (props) =>
 {
-  const { style, onStatusPress, onDeletePress, } = props;
+  const { style, onStatusPress, } = props;
   const { id, title, description, status, createdAt, updatedAt, deletedAt, } = props.data;
+
+  const dispatch = useDispatch();
+
+  const onDeletePress = () =>
+  {
+    const payload = { id, };
+    const action = DeleteTodoActions.Default(payload);
+    dispatch(action);
+  }
 
   const createdAndUpdatedTimeString: string = `Created at: ${CommonUtils.msToHourMin(createdAt)} \
   Update at: ${CommonUtils.msToHourMin(updatedAt)}`;
 
-  const deletedStyle = deletedAt == undefined ? undefined : {borderWidth:1, borderColor:'red',};
+  const deletedStyle = deletedAt == undefined ? undefined : { borderWidth: 1, borderColor: 'red', };
   return (
-    <View style={[styles.container, style, deletedStyle, ]}>
-      <Text style={styles.deleteText} onPress={() => onDeletePress(id)}>Delete</Text>
+    <View style={[styles.container, style, deletedStyle,]}>
+      <Text style={styles.deleteText} onPress={onDeletePress}>Delete</Text>
       <View style={styles.subContainer}>
         <Text style={styles.title}>{title} {id} </Text>
         <Text style={styles.description}>{description} {createdAndUpdatedTimeString}</Text>
