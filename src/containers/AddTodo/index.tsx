@@ -17,8 +17,8 @@ export type Props = {
 
 const AddTodo: React.FC<Props> = (props) =>
 {
-  const [title, setTitle] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
+  const [title, setTitle] = useState<string>('Title');
+  const [description, setDescription] = useState<string>('Description');
   const [todoStatus, setTodoStatus] = useState<StatusType>(0);
 
   const pickerRef = useRef<SelectionModalHandle>();
