@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FlatList, ListRenderItem, ListRenderItemInfo, ScrollView, Text, View, } from 'react-native';
 import { useSelector, useDispatch } from "react-redux";
 import { Button, SelectionModal } from "../../components";
@@ -7,7 +7,7 @@ import { NavigationService } from "../../config";
 import styles from "./styles";
 import TodoItem, { StatusType, TodoType } from "./TodoItem";
 import { TodoSelectors } from "../../store/selectors";
-import { UpdateTodoActions } from "../../store/actions/AppAction";
+import { FetchAllTodoActions, UpdateTodoActions } from "../../store/actions/AppAction";
 import { CommonUtils } from "../../config/utils";
 
 export type Props = {
@@ -19,6 +19,11 @@ const Home: React.FC<Props> = (props) =>
   const todoData = useSelector(TodoSelectors.selectTodos);
 
   const dispatch = useDispatch();
+
+  useEffect(()=>
+  {
+    dispatch(FetchAllTodoActions.Default({}));
+  },[])
 
   const renderList = () =>
   {

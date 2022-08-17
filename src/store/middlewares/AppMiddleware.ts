@@ -1,11 +1,12 @@
 // import { NavigationService, ApiCaller, Constants, showToast } from '../../config';
 import { call, delay, put } from 'redux-saga/effects';
-import { AddTodoActions, DeleteTodoActions, UpdateTodoActions } from '../actions/AppAction';
+import { AddTodoActions, DeleteTodoActions, FetchAllTodoActions, UpdateTodoActions } from '../actions/AppAction';
 import { CommonUtils } from '../../config/utils';
 import { Action } from '../actions/ActionCreator';
-import firestore from '@react-native-firebase/firestore';
+import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import { TodoType } from '../../containers/Home/TodoItem';
 import { Alert } from 'react-native';
+type QuerySnapshot = FirebaseFirestoreTypes.QuerySnapshot<FirebaseFirestoreTypes.DocumentData>;
 
 const TodoCollection = firestore().collection("todo");
 export default class AppMiddleware
@@ -77,9 +78,27 @@ export default class AppMiddleware
             yield put(Failure({}))
         }
     }
+
+    static *FetchAllTodo(action: Action)
+    {
+        const { Success, Failure, } = FetchAllTodoActions;
+        try
+        {   
+            const todosFromServer: QuerySnapshot = yield TodoCollection.get({ source: 'server' });
+            const payload = { querySnapshot: todosFromServer };
+            yield put(Success(payload));
+            if (action.cb) yield call<any>(action.cb);
+        }
+        catch (err)
+        {
+            console.log("Error e:", err);
+            yield put(Failure({}))
+        }
+    }
 }
 
-function getFormattedError(e:any) {
+function getFormattedError(e: any)
+{
     // [auth/no-current-user] No user currently signed in.
     let message = e?.message;
     const code = e?.code;
