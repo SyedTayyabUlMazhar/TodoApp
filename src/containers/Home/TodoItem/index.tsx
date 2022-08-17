@@ -4,7 +4,7 @@ import styles from "./styles";
 import { TouchableOpacity } from 'react-native';
 import { CommonUtils } from "../../../config/utils";
 import { useDispatch } from 'react-redux';
-import { DeleteTodoActions } from "../../../store/actions/AppAction";
+import { UpdateTodoActions } from "../../../store/actions/AppAction";
 
 export const Status = {
   0: { id: 0, value: "Pending", },
@@ -38,8 +38,9 @@ const TodoItem: React.FC<Props> = (props) =>
 
   const onDeletePress = () =>
   {
-    const payload = { id, };
-    const action = DeleteTodoActions.Default(payload);
+    const updates:Partial<TodoType> = {deletedAt:CommonUtils.utcTimeNow()};
+    const payload = { id, updates};
+    const action = UpdateTodoActions.Default(payload);
     dispatch(action);
   }
 

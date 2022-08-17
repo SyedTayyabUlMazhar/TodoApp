@@ -1,6 +1,6 @@
 // import { NavigationService, ApiCaller, Constants, showToast } from '../../config';
 import { call, delay, put } from 'redux-saga/effects';
-import { AddTodoActions, DeleteTodoActions, FetchAllTodoActions, UpdateTodoActions } from '../actions/AppAction';
+import { AddTodoActions, FetchAllTodoActions, UpdateTodoActions } from '../actions/AppAction';
 import { CommonUtils } from '../../config/utils';
 import { Action } from '../actions/ActionCreator';
 import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
@@ -27,31 +27,6 @@ export default class AppMiddleware
         catch (err)
         {
             console.log("Error e:", err);
-            yield put(Failure({}))
-        }
-    }
-
-    static *DeleteTodo(action: Action)
-    {
-        const { Success, Failure, } = DeleteTodoActions;
-        try
-        {
-            //some api call
-            // success can be true or false randomly
-            const id: number = action.payload.id;
-            const updatedTodo: Pick<TodoType, "deletedAt"> = { deletedAt: CommonUtils.utcTimeNow() };
-            yield TodoCollection.doc(id.toString()).update(updatedTodo);
-
-            const successPayload: Pick<TodoType, "id" | "deletedAt"> = { id, deletedAt: updatedTodo.deletedAt };
-
-            yield put(Success(successPayload))
-            yield call(() => action.cb?.());
-        }
-        catch (err)
-        {
-            console.log("DeleteTodo Error e:", err);
-            const formattedError = getFormattedError(err);
-            Alert.alert("Error: " + formattedError.error.code, formattedError.error.message);
             yield put(Failure({}))
         }
     }
