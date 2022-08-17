@@ -3,7 +3,7 @@ import { ActivityIndicator, ActivityIndicatorProps } from 'react-native';
 import styles from './styles';
 import { Modal, View, } from 'react-native';
 
-const Loader: React.FC<ActivityIndicatorProps>
+const Loader: React.FC<ActivityIndicatorProps | CustomProps>
     = ({ style, isModalLoader, ...props }) => {
         if (!isModalLoader) {
             return (

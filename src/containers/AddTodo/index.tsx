@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { View, Text, TextInput } from 'react-native';
-import { ActionLoader, Button, SelectionModal } from '../../components';
+import { Button, SelectionModal } from '../../components';
 import { SelectionModalHandle } from '../../components/SelectionModal';
 import { Status, StatusType, TodoType } from '../Home/TodoItem';
 import styles from './styles';
@@ -57,7 +57,6 @@ const AddTodo: React.FC<Props> = (props) =>
       <Text onPress={onStatusPress}>{Status[todoStatus].value}</Text>
       <SelectionModal ref={pickerRef} callback={onStatusSelectedInModal} />
       <Button.Standard containerStyle={styles.submitBtn} text="Confirm" onPress={onSubmit} />
-      <ActionLoader type={AddTodoActions.BaseType} isModalLoader={true} />
     </View>
   );
 };

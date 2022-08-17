@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationService } from "./config";
 import { Provider } from "react-redux";
 import store from "./store";
+import { AnyActionLoader } from "./components";
 
 export type Props = {
 }
@@ -26,6 +27,7 @@ const App: React.FC<Props> = (props) =>
           <Stack.Screen name="AddTodo" component={AddTodo} />
         </Stack.Navigator>
       </NavigationContainer>
+      <AnyActionLoader />
     </Provider>
   );
 }
