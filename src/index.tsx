@@ -8,6 +8,8 @@ import { Provider } from "react-redux";
 import store from "./store";
 import { AnyActionLoader } from "./components";
 
+AppStore.setStore(store);
+
 export type Props = {
 }
 
@@ -15,11 +17,6 @@ const Stack = createStackNavigator();
 
 const Root: React.FC<Props> = (props) =>
 {
-  useEffect(()=>
-  {
-    AppStore.setStore(store);
-  }, [])
-
   return (
     <Provider store={store}>
       <App />
