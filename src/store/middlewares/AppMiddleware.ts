@@ -41,9 +41,6 @@ export default class AppMiddleware
             let {id, updates} = action.payload;
             yield TodoCollection.doc(id.toString()).update(updates);
 
-            const successPayload = { id, updates };
-
-            yield put(Reducer(successPayload))
             yield put(Success({}))
             yield call(() => action.cb?.());
         }
