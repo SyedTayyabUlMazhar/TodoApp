@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import 'react-native-gesture-handler';
 import { AddTodo, Home } from "./containers";
 import { NavigationContainer } from '@react-navigation/native';
@@ -7,6 +7,9 @@ import { AppStore, NavigationService } from "./config";
 import { Provider } from "react-redux";
 import store from "./store";
 import { AnyActionLoader } from "./components";
+import { CommonUtils } from "./config/utils";
+import { SaveActionSelector } from "./store/selectors";
+import { SavedAction } from "./store/reducers/SaveActionReducer";
 
 AppStore.setStore(store);
 
@@ -26,6 +29,34 @@ const Root: React.FC<Props> = (props) =>
 
 const App: React.FC<Props> = (props) =>
 {
+  const [isInternetReachable, setIsInternetReachable] = useState<boolean>(false);
+  
+  useEffect(() => 
+  {
+    const unsub = CommonUtils.addNetInfoListener((state)=>
+    {
+      setIsInternetReachable(state.isInternetReachable ?? false);
+    });
+    return unsub;
+  },[]);
+
+  useEffect(() => 
+  {
+    if(!isInternetReachable) return;
+
+    dispatchAllSavedActions();
+  },[isInternetReachable]);
+
+  const dispatchAllSavedActions = () =>
+  {
+    const actionQueue:SavedAction[] = SaveActionSelector.selectActionsQueue(AppStore.getStore().getState());
+      
+    actionQueue.forEach((action:SavedAction)=>
+    {
+      action.cb = undefined;
+      AppStore.dispatch(action)
+    })
+  }
   return (
     <>
       <NavigationContainer
