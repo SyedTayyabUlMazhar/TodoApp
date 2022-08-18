@@ -15,7 +15,7 @@ export default class AppMiddleware
     static *AddTodo(action: Action)
     {
         const { Success, Failure, Reducer, } = AddTodoActions;
-        const todo: TodoType = action.payload as TodoType;
+        const todo: TodoType = action.payload.todo as TodoType;
         try
         {
             //some api call

@@ -21,7 +21,7 @@ export default function TodoReducer(state = initialState, action: Action)
     {
         case AddTodoActions.Reducer.type: {
 
-            const todo = { ...payload } as TodoType;
+            const todo = { ...payload.todo } as TodoType;
 
             state = { ...state, todos: [todo, ...state.todos,] };
             return state;

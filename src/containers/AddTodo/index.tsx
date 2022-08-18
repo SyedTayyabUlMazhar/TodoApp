@@ -37,7 +37,8 @@ const AddTodo: React.FC<Props> = (props) =>
   {
     const createdAt = CommonUtils.utcTimeNow();
     const todo: TodoType = { id: CommonUtils.getNewUid(), description, status: todoStatus, title, createdAt, updatedAt: createdAt };
-    dispatch(AddTodoActions.Default(todo, () => NavigationService.goBack()));
+    const payload = {todo};
+    dispatch(AddTodoActions.Default(payload, () => NavigationService.goBack()));
   }
   return (
     <View style={styles.container}>
