@@ -1,6 +1,9 @@
 import moment from "moment";
 import NetInfo, { NetInfoState } from "@react-native-community/netinfo";
 import { v4 as uuidv4 } from 'uuid';
+import { ActionCreators, Payload } from "../../store/actions/ActionCreator";
+import AppStore from "../appStore";
+import { SaveAction } from "../../store/actions/AppAction";
 
 function utcTimeNow(): number
 {
@@ -36,6 +39,32 @@ function getNewUid():string
   return uuidv4();
 }
 
+/**
+ * 
+ * Dispatches Reducer action with given payload.
+ * If internet is working then dispatches Default action with  given payload
+ * otherwise saves the default action to SaveActionReducer.
+ */
+async function offlineActionDispatcher(actionCreators:ActionCreators, payload:Payload, cb?:Function, ...arg:any[])
+{
+  const dispatch = AppStore.dispatch;
+  const {Reducer, Default,} = actionCreators;
+  
+  dispatch(Reducer(payload, cb, ...arg));
+
+  if( await checkIfInternetReachable())
+  {
+    const middlewareAction = Default(payload, cb, ...arg);
+    dispatch(middlewareAction);
+  }
+  else
+  {
+    const middlewareAction = Default(payload);
+    const saveActionPayload = { action:{...middlewareAction, storedRequest:true, id:getNewUid()} };
+    dispatch(SaveAction(saveActionPayload));
+  }
+}
+
 export default {
   utcTimeNow,
   msToHourMin,
@@ -43,4 +72,5 @@ export default {
   checkIfInternetReachable,
   getNewUid,
   addNetInfoListener,
+  offlineActionDispatcher,
 }
