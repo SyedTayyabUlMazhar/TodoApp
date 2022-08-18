@@ -3,7 +3,7 @@ import 'react-native-gesture-handler';
 import { AddTodo, Home } from "./containers";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationService } from "./config";
+import { AppStore, NavigationService } from "./config";
 import { Provider } from "react-redux";
 import store from "./store";
 import { AnyActionLoader } from "./components";
@@ -13,10 +13,24 @@ export type Props = {
 
 const Stack = createStackNavigator();
 
+const Root: React.FC<Props> = (props) =>
+{
+  useEffect(()=>
+  {
+    AppStore.setStore(store);
+  }, [])
+
+  return (
+    <Provider store={store}>
+      <App />
+    </Provider>
+  );
+}
+
 const App: React.FC<Props> = (props) =>
 {
   return (
-    <Provider store={store}>
+    <>
       <NavigationContainer
         ref={navigatorRef =>
         {
@@ -28,8 +42,8 @@ const App: React.FC<Props> = (props) =>
         </Stack.Navigator>
       </NavigationContainer>
       <AnyActionLoader />
-    </Provider>
+    </>
   );
 }
 
-export default App;
+export default Root;
