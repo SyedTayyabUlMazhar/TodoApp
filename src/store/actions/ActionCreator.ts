@@ -1,5 +1,5 @@
 
-export const CommonActionTypes = { Default: 'Default', Success: "Success", Failure: "Failure", };
+export const CommonActionTypes = { Default: 'Default', Reducer: 'Reducer', Success: "Success", Failure: "Failure", };
 type Payload = {[key:string]:any};
 
 // Action that is dispatched to store dispatch(action:Action)
@@ -7,7 +7,7 @@ export type Action = { type:string, payload: Payload, cb?: Function, vararg: any
 
 type ActionCreator = { (payload: Payload, cb?: Function, ...arg: any[]): Action, type: string };
 
-type ActionCreators = { BaseType:string, Default: ActionCreator, Success: ActionCreator, Failure: ActionCreator, };
+type ActionCreators = { BaseType:string, Default: ActionCreator, Reducer: ActionCreator, Success: ActionCreator, Failure: ActionCreator, };
 
 function createActionCreator(type: string): ActionCreator
 {
@@ -44,4 +44,5 @@ function createActions(baseType: string): ActionCreators
 
 export  {
   createActions,
+  createActionCreator,
 }

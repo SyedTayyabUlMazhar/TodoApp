@@ -14,14 +14,15 @@ export default class AppMiddleware
 
     static *AddTodo(action: Action)
     {
-        const { Success, Failure, } = AddTodoActions;
+        const { Success, Failure, Reducer, } = AddTodoActions;
         const todo: TodoType = action.payload as TodoType;
         try
         {
             //some api call
             // success can be true or false randomly
             yield TodoCollection.doc(todo.id.toString()).set(todo);
-            yield put(Success(action.payload))
+            yield put(Reducer(action.payload))
+            yield put(Success({}))
             if (action.cb) yield call<any>(action.cb);
         }
         catch (err)
@@ -33,7 +34,7 @@ export default class AppMiddleware
 
     static *UpdateTodo(action: Action)
     {
-        const { Success, Failure, } = UpdateTodoActions;
+        const { Success, Failure, Reducer, } = UpdateTodoActions;
         try
         {
             //some api call
@@ -43,7 +44,8 @@ export default class AppMiddleware
 
             const successPayload = { id, updates };
 
-            yield put(Success(successPayload))
+            yield put(Reducer(successPayload))
+            yield put(Success({}))
             yield call(() => action.cb?.());
         }
         catch (err)
@@ -56,12 +58,13 @@ export default class AppMiddleware
 
     static *FetchAllTodo(action: Action)
     {
-        const { Success, Failure, } = FetchAllTodoActions;
+        const { Success, Failure, Reducer,} = FetchAllTodoActions;
         try
         {   
             const todosFromServer: QuerySnapshot = yield TodoCollection.get({ source: 'server' });
             const payload = { querySnapshot: todosFromServer };
-            yield put(Success(payload));
+            yield put(Reducer(payload));
+            yield put(Success({}));
             if (action.cb) yield call<any>(action.cb);
         }
         catch (err)

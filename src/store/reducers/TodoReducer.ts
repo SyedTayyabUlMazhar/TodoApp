@@ -19,7 +19,7 @@ export default function TodoReducer(state = initialState, action: Action)
 
     switch (type)
     {
-        case AddTodoActions.Success.type: {
+        case AddTodoActions.Reducer.type: {
 
             const todo = { ...payload } as TodoType;
 
@@ -27,7 +27,7 @@ export default function TodoReducer(state = initialState, action: Action)
             return state;
         }
 
-        case UpdateTodoActions.Success.type: {
+        case UpdateTodoActions.Reducer.type: {
             const { id, updates } = payload;
 
             const toUpdateIndex: number = state.todos.findIndex((todo) => todo.id === id);
@@ -40,7 +40,7 @@ export default function TodoReducer(state = initialState, action: Action)
 
             return state;
         }
-        case FetchAllTodoActions.Success.type: {
+        case FetchAllTodoActions.Reducer.type: {
             const { querySnapshot } = payload;
             const todosDocs: TodoType[] = getDocsFromQuerySnapshot<TodoType>(querySnapshot);
             state = {...state, todos:[...todosDocs]};
