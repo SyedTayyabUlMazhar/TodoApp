@@ -15,7 +15,7 @@ export const Status = {
 export type StatusType = 0 | 1 | 2;
 
 export type TodoType = {
-  id: number,
+  id: string,
   title: string,
   description: string,
   status: StatusType,

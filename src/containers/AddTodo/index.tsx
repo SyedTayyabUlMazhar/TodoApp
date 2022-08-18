@@ -8,8 +8,6 @@ import { NavigationService } from '../../config';
 import { CommonUtils } from '../../config/utils';
 import { AddTodoActions } from '../../store/actions/AppAction';
 import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-import { TodoSelectors } from '../../store/selectors';
 
 export type Props = {
   route: any,
@@ -22,7 +20,6 @@ const AddTodo: React.FC<Props> = (props) =>
   const [todoStatus, setTodoStatus] = useState<StatusType>(0);
 
   const pickerRef = useRef<SelectionModalHandle>();
-  const todosLength = useSelector(TodoSelectors.selectTodosLength);
 
   const dispatch = useDispatch();
 
@@ -39,7 +36,7 @@ const AddTodo: React.FC<Props> = (props) =>
   const onSubmit = () =>
   {
     const createdAt = CommonUtils.utcTimeNow();
-    const todo: TodoType = { id: todosLength + 1, description, status: todoStatus, title, createdAt, updatedAt: createdAt };
+    const todo: TodoType = { id: CommonUtils.getNewUid(), description, status: todoStatus, title, createdAt, updatedAt: createdAt };
     dispatch(AddTodoActions.Default(todo, () => NavigationService.goBack()));
   }
   return (
