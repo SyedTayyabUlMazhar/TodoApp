@@ -21,7 +21,6 @@ export default class AppMiddleware
             //some api call
             // success can be true or false randomly
             yield TodoCollection.doc(todo.id.toString()).set(todo);
-            yield put(Reducer(action.payload))
             yield put(Success({}))
             if (action.cb) yield call<any>(action.cb);
         }
