@@ -10,6 +10,7 @@ import { AnyActionLoader } from "./components";
 import { CommonUtils } from "./config/utils";
 import { SaveActionSelector } from "./store/selectors";
 import { SavedAction } from "./store/reducers/SaveActionReducer";
+import { RemoveSavedAction } from "./store/actions/AppAction";
 
 AppStore.setStore(store);
 
@@ -53,7 +54,12 @@ const App: React.FC<Props> = (props) =>
       
     actionQueue.forEach((action:SavedAction)=>
     {
-      action.cb = undefined;
+      const actionId = action.id;
+      action.cb = (success:boolean) => 
+      {
+        if(success)
+          AppStore.dispatch(RemoveSavedAction({id:actionId}));
+      }
       AppStore.dispatch(action)
     })
   }
