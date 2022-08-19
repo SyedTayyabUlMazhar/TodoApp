@@ -22,12 +22,13 @@ export default class AppMiddleware
             // success can be true or false randomly
             yield TodoCollection.doc(todo.id.toString()).set(todo);
             yield put(Success({}))
-            if (action.cb) yield call<any>(action.cb);
+            if (action.cb) yield call<any>(action.cb, true);
         }
         catch (err)
         {
             console.log("Error e:", err);
             yield put(Failure({}))
+            if (action.cb) yield call<any>(action.cb, false);
         }
     }
 
@@ -42,13 +43,14 @@ export default class AppMiddleware
             yield TodoCollection.doc(id.toString()).update(updates);
 
             yield put(Success({}))
-            yield call(() => action.cb?.());
+            if (action.cb) yield call<any>(action.cb, true);
         }
         catch (err)
         {
             const formattedError = getFormattedError(err);
             Alert.alert("Error: " + formattedError.error.code, formattedError.error.message);
             yield put(Failure({}))
+            if (action.cb) yield call<any>(action.cb, false);
         }
     }
 
