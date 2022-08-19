@@ -1,7 +1,7 @@
 import { Action } from "../actions/ActionCreator";
 import { SaveAction, RemoveSavedAction } from "../actions/AppAction";
 
-export type SavedAction = Action & {storedRequest:boolean, id:string}; 
+export type SavedAction = Action & { id:string }; 
 
 type StateType = {
     actionsQueue: SavedAction[],

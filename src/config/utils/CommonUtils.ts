@@ -60,7 +60,7 @@ async function offlineActionDispatcher(actionCreators:ActionCreators, payload:Pa
   else
   {
     const middlewareAction = Default(payload);
-    const saveActionPayload = { action:{...middlewareAction, storedRequest:true, id:getNewUid()} };
+    const saveActionPayload = { action:{...middlewareAction, id:getNewUid()} };
     dispatch(SaveAction(saveActionPayload));
   }
 }
