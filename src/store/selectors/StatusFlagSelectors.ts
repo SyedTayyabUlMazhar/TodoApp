@@ -1,6 +1,6 @@
 function isRequestLoading(baseType: string):(state:any)=>boolean
 {
-  return (state:any) => state.StatusFlagsReducer?.[baseType]?.loading;
+  return (state:any) => Boolean(state.StatusFlagsReducer?.[baseType]?.loading);
 }
 
 function isAnyRequestLoading(state:any):boolean

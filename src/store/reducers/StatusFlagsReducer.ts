@@ -21,7 +21,10 @@ export default function StatusFlagsReducer (state = initialState, action: Action
         const baseActionType = matches[1];
 
         state = {...state};
-        state[baseActionType] = {loading: matches[2] === Default};
+
+        let currentLoadingValueOfAction = state[baseActionType]?.loading ?? 0;
+        currentLoadingValueOfAction += matches[2] === Default ? +1 : -1;
+        state[baseActionType] = {loading: currentLoadingValueOfAction};
 
         return state;
     }
