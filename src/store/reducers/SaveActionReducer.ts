@@ -1,3 +1,4 @@
+import { createReducer } from "@reduxjs/toolkit";
 import { Action } from "../actions/ActionCreator";
 import { SaveAction, RemoveSavedAction } from "../actions/AppAction";
 
@@ -10,26 +11,24 @@ const initialState: StateType = {
     actionsQueue: [],
 };
 
-export default function SaveActionReducer(state = initialState, action: Action)
+const SaveActionReducer = createReducer(initialState, (builder) => 
 {
-    const { type, payload } = action;
+    builder
 
-    switch (type)
+    .addCase(SaveAction.type, (state:StateType, action:Action) => 
     {
-        case SaveAction.type: {
-            state = {...state, actionsQueue:[...state.actionsQueue, payload.action]};
-            return state;
-        }
+        state.actionsQueue.push(action.payload.action);
+    })
 
-        case RemoveSavedAction.type: {
-            const { id } = payload;
-            const updatedActionsQueue = state.actionsQueue
-                .filter((action)=>action.id !== id);
-            
-            state = {...state, actionsQueue:updatedActionsQueue};
+    .addCase(RemoveSavedAction.type, (state:StateType, action:Action) => 
+    {
+        const { id } = action.payload;
+        const updatedActionsQueue = state.actionsQueue
+            .filter((action)=>action.id !== id);
+        
+        state.actionsQueue = updatedActionsQueue;
+    })
 
-            return state;
-        }
-        default: return state;
-    }
-}
+});
+
+export default SaveActionReducer;

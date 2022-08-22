@@ -1,4 +1,5 @@
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
+import { createReducer } from "@reduxjs/toolkit";
 import { CommonUtils } from "../../config/utils";
 import { TodoType } from "../../containers/Home/TodoItem";
 import { Action } from "../actions/ActionCreator";
@@ -13,43 +14,30 @@ const initialState: StateType = {
     todos: []
 };
 
-export default function TodoReducer(state = initialState, action: Action)
-{
-    const { type, payload } = action;
+const TodoReducer = createReducer(initialState, (builder) => {
+    builder
 
-    switch (type)
+    .addCase(AddTodoActions.Reducer.type, (state:StateType, action:Action) => 
     {
-        case AddTodoActions.Reducer.type: {
+        state.todos.unshift(action.payload.todo)
+    })
 
-            const todo = { ...payload.todo } as TodoType;
+    .addCase(UpdateTodoActions.Reducer.type, (state:StateType, action:Action) => 
+    {
+        const { id, updates } = action.payload;
 
-            state = { ...state, todos: [todo, ...state.todos,] };
-            return state;
-        }
+        const toUpdateIndex: number = state.todos.findIndex((todo) => todo.id === id);
 
-        case UpdateTodoActions.Reducer.type: {
-            const { id, updates } = payload;
+        Object.assign(state.todos[toUpdateIndex], updates);
+    })
 
-            const toUpdateIndex: number = state.todos.findIndex((todo) => todo.id === id);
-
-            const itemToUpdate = state.todos[toUpdateIndex];
-            const updatedItem = { ...itemToUpdate, ...updates}
-
-            state = { ...state, todos: [...state.todos] };
-            state.todos[toUpdateIndex] = updatedItem;
-
-            return state;
-        }
-        case FetchAllTodoActions.Reducer.type: {
-            const { querySnapshot } = payload;
-            const todosDocs: TodoType[] = getDocsFromQuerySnapshot<TodoType>(querySnapshot);
-            state = {...state, todos:[...todosDocs]};
-            return state;
-        }
-        default:
-            return state;
-    }
-}
+    .addCase(FetchAllTodoActions.Reducer.type, (state:StateType, action:Action) => 
+    {
+        const { querySnapshot } = action.payload;
+        const todosDocs: TodoType[] = getDocsFromQuerySnapshot<TodoType>(querySnapshot);
+        state.todos = todosDocs;
+    })
+})
 
 function getDocsFromQuerySnapshot<T>(querySnapshot: QuerySnapshot): T[]
 {
@@ -61,3 +49,5 @@ function getDocsFromQuerySnapshot<T>(querySnapshot: QuerySnapshot): T[]
 
     return docsArray;
 }
+
+export default TodoReducer;

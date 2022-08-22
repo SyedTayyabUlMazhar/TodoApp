@@ -1,4 +1,4 @@
-import { TodoType } from "../../containers/Home/TodoItem";
+import { createReducer } from "@reduxjs/toolkit";
 import { Action, CommonActionTypes } from "../actions/ActionCreator";
 const {Default, Success, Failure, } = CommonActionTypes;
 
@@ -11,23 +11,32 @@ type StateType = {
 const initialState:StateType = {
 };
 
-export default function StatusFlagsReducer (state = initialState, action: Action)
+const defaultOrSuccessOrFailureActionMatcher = (action:Action) => 
 {
-    const type = action.type;
+    const matches = regularExpression.exec(action.type) ?? [];
 
-    const matches = regularExpression.exec(type);
-    if(matches)
-    {
-        const baseActionType = matches[1];
-
-        state = {...state};
-
-        let currentLoadingValueOfAction = state[baseActionType]?.loading ?? 0;
-        currentLoadingValueOfAction += matches[2] === Default ? +1 : -1;
-        state[baseActionType] = {loading: currentLoadingValueOfAction};
-
-        return state;
-    }
-
-    return state;
+    return matches.length > 0;
 }
+
+const StatusFlagsReducer = createReducer(initialState, (builder) => {
+    builder
+
+    .addMatcher(defaultOrSuccessOrFailureActionMatcher, (state:StateType, action:Action) => 
+    {
+        const type = action.type;
+
+        const matches = regularExpression.exec(type)!;
+
+        const baseActionType = matches[1];
+        const isDefaultAction = matches[2] === Default;
+
+        state[baseActionType] ??= { loading: 0 };
+
+        state[baseActionType].loading += isDefaultAction ? +1 : -1;
+
+    })
+
+});
+
+
+export default StatusFlagsReducer;
