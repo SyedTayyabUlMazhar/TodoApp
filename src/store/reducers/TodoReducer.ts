@@ -20,6 +20,8 @@ const TodoReducer = createReducer(initialState, (builder) => {
     .addCase(AddTodoActions.Reducer.type, (state:StateType, action:Action) => 
     {
         state.todos.unshift(action.payload.todo)
+
+        action.cb?.();
     })
 
     .addCase(UpdateTodoActions.Reducer.type, (state:StateType, action:Action) => 
@@ -29,6 +31,8 @@ const TodoReducer = createReducer(initialState, (builder) => {
         const toUpdateIndex: number = state.todos.findIndex((todo) => todo.id === id);
 
         Object.assign(state.todos[toUpdateIndex], updates);
+
+        action.cb?.();
     })
 
     .addCase(FetchAllTodoActions.Reducer.type, (state:StateType, action:Action) => 
@@ -36,6 +40,8 @@ const TodoReducer = createReducer(initialState, (builder) => {
         const { querySnapshot } = action.payload;
         const todosDocs: TodoType[] = getDocsFromQuerySnapshot<TodoType>(querySnapshot);
         state.todos = todosDocs;
+
+        action.cb?.();
     })
 })
 

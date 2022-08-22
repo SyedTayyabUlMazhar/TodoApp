@@ -54,12 +54,12 @@ async function offlineActionDispatcher(actionCreators:ActionCreators, payload:Pa
 
   if( await checkIfInternetReachable())
   {
-    const middlewareAction = Default(payload, cb, ...arg);
+    const middlewareAction = Default(payload, undefined, ...arg);
     dispatch(middlewareAction);
   }
   else
   {
-    const middlewareAction = Default(payload);
+    const middlewareAction = Default(payload, undefined, ...arg);
     const saveActionPayload = { action:{...middlewareAction, id:getNewUid()} };
     dispatch(SaveAction(saveActionPayload));
   }
