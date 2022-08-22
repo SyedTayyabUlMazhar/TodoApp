@@ -59,7 +59,8 @@ export default class AppMiddleware
         const { Success, Failure, Reducer,} = FetchAllTodoActions;
         try
         {   
-            const todosFromServer: QuerySnapshot = yield TodoCollection.get({ source: 'server' });
+            const orderByFieldName:keyof TodoType = 'updatedAt';
+            const todosFromServer: QuerySnapshot = yield TodoCollection.orderBy(orderByFieldName, "desc").get({ source: 'server' });
             const payload = { querySnapshot: todosFromServer };
             yield put(Reducer(payload));
             yield put(Success({}));
