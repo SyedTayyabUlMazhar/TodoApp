@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware, compose } from 'redux';
+import { compose } from 'redux';
 import RootReducer from './reducers';
 import createSagaMiddleware from 'redux-saga'
 import storage from '@react-native-async-storage/async-storage'; //  AsyncStorage for react-native
@@ -6,6 +6,7 @@ import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import { Sagas } from "./sagas"
 import whiteList from './whiteList';
 import { persistStore, persistReducer } from 'redux-persist';
+import { configureStore } from '@reduxjs/toolkit';
 
 
 const sagaMiddleware = createSagaMiddleware();
@@ -24,10 +25,10 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, RootReducer);
 
-const store = createStore(
-    persistedReducer,
-    composeEnhancers(applyMiddleware(sagaMiddleware)),
-);
+const store = configureStore({
+    reducer:persistedReducer, 
+    middleware: [sagaMiddleware]
+});
 
 // init store with redux persist
 persistStore(store);
