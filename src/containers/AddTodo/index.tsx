@@ -36,7 +36,7 @@ const AddTodo: React.FC<Props> = (props) =>
   const onSubmit = () =>
   {
     const createdAt = CommonUtils.utcTimeNow();
-    const todo: TodoType = { id: CommonUtils.getNewUid(), description, status: todoStatus, title, createdAt, updatedAt: createdAt };
+    const todo: TodoType = { id: CommonUtils.getNewUid(), description, status: todoStatus, title, createdAt, updatedAt: createdAt, isLive:false, };
     const payload = {todo};
     CommonUtils.offlineActionDispatcher(AddTodoActions, payload, ()=> NavigationService.goBack());
   }

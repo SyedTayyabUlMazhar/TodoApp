@@ -20,7 +20,8 @@ export default class AppMiddleware
         {
             //some api call
             // success can be true or false randomly
-            yield TodoCollection.doc(todo.id.toString()).set(todo);
+            yield TodoCollection.doc(todo.id.toString()).set({...todo, isLive:true});
+            yield put(UpdateTodoActions.Reducer({id:todo.id, updates:{isLive:true}}));
             yield put(Success({}))
             if (action.cb) yield call<any>(action.cb, true);
         }
@@ -40,7 +41,8 @@ export default class AppMiddleware
             //some api call
             // success can be true or false randomly
             let {id, updates} = action.payload;
-            yield TodoCollection.doc(id.toString()).update(updates);
+            yield TodoCollection.doc(id.toString()).update({...updates, isLive:true});
+            yield put(UpdateTodoActions.Reducer({id:id, updates:{isLive:true}}));
 
             yield put(Success({}))
             if (action.cb) yield call<any>(action.cb, true);

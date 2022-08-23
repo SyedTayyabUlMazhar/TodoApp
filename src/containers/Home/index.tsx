@@ -51,7 +51,7 @@ const Home: React.FC<Props> = (props) =>
 
   const updateTodoStatus = (todoId: number, status: StatusType) =>
   {
-    const updates:Partial<TodoType> = {status, updatedAt:CommonUtils.utcTimeNow()};
+    const updates:Partial<TodoType> = {status, updatedAt:CommonUtils.utcTimeNow(), isLive: false};
     const payload = {id: todoId, updates};
     CommonUtils.offlineActionDispatcher(UpdateTodoActions, payload);
   }
