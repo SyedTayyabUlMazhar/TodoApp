@@ -22,6 +22,7 @@ export type TodoType = {
   createdAt: number,
   updatedAt: number,
   deletedAt?: number,
+  isLive?: boolean,
 };
 export type Props = {
   data: TodoType,
@@ -32,7 +33,7 @@ export type Props = {
 const TodoItem: React.FC<Props> = (props) =>
 {
   const { style, onStatusPress, } = props;
-  const { id, title, description, status, createdAt, updatedAt, deletedAt, } = props.data;
+  const { id, title, description, status, createdAt, updatedAt, deletedAt, isLive, } = props.data;
 
   const dispatch = useDispatch();
 
@@ -47,9 +48,15 @@ const TodoItem: React.FC<Props> = (props) =>
   const createdAndUpdatedTimeString: string = `Created at: ${CommonUtils.msToHourMin(createdAt)} \
   Update at: ${CommonUtils.msToHourMin(updatedAt)}`;
 
+  const renderIsLiveCircle = () =>
+  {
+    return <View style={[styles.isLiveCircle, isLive ? styles.isLiveTrue : styles.isLiveFalse]}/>
+  }
+
   const deletedStyle = deletedAt == undefined ? undefined : { borderWidth: 1, borderColor: 'red', };
   return (
     <View style={[styles.container, style, deletedStyle,]}>
+      {renderIsLiveCircle()}
       <Text style={styles.deleteText} onPress={onDeletePress}>Delete</Text>
       <View style={styles.subContainer}>
         <Text style={styles.title}>{title} {id} </Text>

@@ -32,7 +32,24 @@ export default StyleSheet.create({
     top: 8,
     right: 8,
     fontSize: 10,
-  }
+  },
+
+  isLiveTrue:{
+    backgroundColor: 'green', 
+  },
+
+  isLiveFalse:{
+    backgroundColor: 'red', 
+  },
+  
+  isLiveCircle: {
+    width:6, 
+    height:6, 
+    borderRadius:100, 
+    position:'absolute', 
+    top:4, 
+    left:4,
+  },
 
 
 });
