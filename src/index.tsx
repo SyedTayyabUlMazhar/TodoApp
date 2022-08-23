@@ -54,13 +54,16 @@ const App: React.FC<Props> = (props) =>
       
     actionQueue.forEach((action:SavedAction)=>
     {
-      const actionId = action.id;
-      action.cb = (success:boolean) => 
+      // create copy because object in redux store are frozen
+      const actionCopy = {...action};
+      const actionId = actionCopy.id;
+      actionCopy.cb = (success:boolean) => 
       {
         if(success)
           AppStore.dispatch(RemoveSavedAction({id:actionId}));
       }
-      AppStore.dispatch(action)
+
+      AppStore.dispatch(actionCopy)
     })
   }
   return (
