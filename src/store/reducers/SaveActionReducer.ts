@@ -2,8 +2,9 @@ import { createReducer } from "@reduxjs/toolkit";
 import { Action } from "../actions/ActionCreator";
 import { SaveAction, RemoveSavedAction, AddTodoActions, UpdateTodoActions } from "../actions/AppAction";
 
-type Payload = { action:Action & {id: string} };
-export type SavedAction = Action & { payload:Payload, }; 
+export type SavedAction = Action & {id: string};
+type Payload = { action: SavedAction};
+export type DispatchedAction = Action & { payload:Payload, }; 
 
 type StateType = {
     actionsQueue: (Action & {id: string})[],
@@ -16,7 +17,7 @@ const SaveActionReducer = createReducer(initialState, (builder) =>
 {
     builder
 
-    .addCase(SaveAction.type, (state:StateType, action:SavedAction) => 
+    .addCase(SaveAction.type, (state:StateType, action:DispatchedAction) => 
     {
         const actionToSave = action.payload.action;
         const typeOfActionToSave = actionToSave.type;
@@ -56,7 +57,7 @@ const SaveActionReducer = createReducer(initialState, (builder) =>
         }
     })
 
-    .addCase(RemoveSavedAction.type, (state:StateType, action:SavedAction) => 
+    .addCase(RemoveSavedAction.type, (state:StateType, action:DispatchedAction) => 
     {
         const { id } = action.payload;
         const updatedActionsQueue = state.actionsQueue
