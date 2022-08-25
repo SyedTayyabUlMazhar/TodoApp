@@ -8,6 +8,7 @@ import { NavigationService } from '../../config';
 import { CommonUtils } from '../../config/utils';
 import { AddTodoActions } from '../../store/actions/AppAction';
 import { useDispatch } from 'react-redux';
+import { AddTodoPayload } from '../../store/actions/AppAction.types';
 
 export type Props = {
   route: any,
@@ -38,7 +39,7 @@ const AddTodo: React.FC<Props> = (props) =>
     const createdAt = CommonUtils.utcTimeNow();
     const todo: TodoType = { id: CommonUtils.getNewUid(), description, status: todoStatus, title, createdAt, updatedAt: createdAt, isLive:false, };
     const payload = {todo};
-    CommonUtils.offlineActionDispatcher(AddTodoActions, payload, ()=> NavigationService.goBack());
+    CommonUtils.offlineActionDispatcher<AddTodoPayload>(AddTodoActions, payload, ()=> NavigationService.goBack());
   }
   return (
     <View style={styles.container}>

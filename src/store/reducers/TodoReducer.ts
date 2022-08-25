@@ -17,14 +17,14 @@ const initialState: StateType = {
 const TodoReducer = createReducer(initialState, (builder) => {
     builder
 
-    .addCase(AddTodoActions.Reducer.type, (state:StateType, action:Action) => 
+    .addCase(AddTodoActions.Reducer.type, (state:StateType, action:ReturnType<typeof AddTodoActions.Reducer>) => 
     {
         state.todos.unshift(action.payload.todo)
 
         action.cb?.();
     })
 
-    .addCase(UpdateTodoActions.Reducer.type, (state:StateType, action:Action) => 
+    .addCase(UpdateTodoActions.Reducer.type, (state:StateType, action:ReturnType<typeof UpdateTodoActions.Reducer>) => 
     {
         const { id, updates } = action.payload;
 
