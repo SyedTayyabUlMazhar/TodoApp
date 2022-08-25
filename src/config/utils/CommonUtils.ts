@@ -45,7 +45,7 @@ function getNewUid():string
  * If internet is working then dispatches Default action with  given payload
  * otherwise saves the default action to SaveActionReducer.
  */
-async function offlineActionDispatcher(actionCreators:ActionCreators, payload:Payload, cb?:Function, ...arg:any[])
+async function offlineActionDispatcher<P>(actionCreators:ActionCreators<P>, payload:P, cb?:Function, ...arg:any[])
 {
   const dispatch = AppStore.dispatch;
   const {Reducer, Default,} = actionCreators;

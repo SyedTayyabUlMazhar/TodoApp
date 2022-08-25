@@ -3,15 +3,15 @@ export const CommonActionTypes = { Default: 'Default', Reducer: 'Reducer', Succe
 export type Payload = {[key:string]:any};
 
 // Action that is dispatched to store dispatch(action:Action)
-export type Action = { type:string, payload: Payload, cb?: Function, vararg: any[] };
+export type Action<P> = { type:string, payload: P, cb?: Function, vararg: any[] };
 
-type ActionCreator = { (payload: Payload, cb?: Function, ...arg: any[]): Action, type: string };
+type ActionCreator<P> = { (payload: P, cb?: Function, ...arg: any[]): Action<P>, type: string };
 
-export type ActionCreators = { BaseType:string, Default: ActionCreator, Reducer: ActionCreator, Success: ActionCreator, Failure: ActionCreator, };
+export type ActionCreators<P> = { BaseType:string, Default: ActionCreator<P>, Reducer: ActionCreator<P>, Success: ActionCreator<{}>, Failure: ActionCreator<{}>, };
 
-function createActionCreator(type: string): ActionCreator
+function createActionCreator<P>(type: string)
 {
-  const actionCreator:ActionCreator = (payload: Payload, cb?: Function, ...vararg: any[]) => ({ type, payload, cb, vararg });
+  const actionCreator:ActionCreator<P> = (payload: P, cb?: Function, ...vararg: any[]) => ({ type, payload, cb, vararg });
   actionCreator.type = type;
 
   return actionCreator;
@@ -26,7 +26,7 @@ function createActionCreator(type: string): ActionCreator
 *  }
 * 
 */
-function createActions(baseType: string): ActionCreators
+function createActions<P>(baseType: string): ActionCreators<P>
 {
   const actionCreators: any = {BaseType:baseType};
 
@@ -36,7 +36,7 @@ function createActions(baseType: string): ActionCreators
   {
     const fullType = baseType + '_' + type;
 
-    actionCreators[type] = createActionCreator(fullType);
+    actionCreators[type] = createActionCreator<P>(fullType);
   });
 
   return actionCreators;
